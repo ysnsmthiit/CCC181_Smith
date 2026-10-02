@@ -29,16 +29,16 @@ My Git configuration uses my student ID number without the hyphen, as instructed
 | 11 | fix-typo | <img src="smith_yaseen_11.png"> |
 | 12 | forge-date | <img src="smith_yaseen_12.png"> |
 | 13 | fix-old-typo | <img src="smith_yaseen_13.png"> |
-| 14 | <Exercise Title> | <img src="smith_yaseen_14.png"> |
-| 15 | <Exercise Title> | <img src="smith_yaseen_15.png"> |
-| 16 | <Exercise Title> | <img src="smith_yaseen_16.png"> |
-| 17 | <Exercise Title> | <img src="smith_yaseen_17.png"> |
-| 18 | <Exercise Title> | <img src="smith_yaseen_18.png"> |
-| 19 | <Exercise Title> | <img src="smith_yaseen_19.png"> |
-| 20 | <Exercise Title> | <img src="smith_yaseen_20.png"> |
-| 21 | <Exercise Title> | <img src="smith_yaseen_21.png"> |
-| 22 | <Exercise Title> | <img src="smith_yaseen_22.png"> |
-| 23 | <Exercise Title> | <img src="smith_yaseen_23.png"> |
+| 14 | commit-lost | <img src="smith_yaseen_14.png"> |
+| 15 | split-commit | <img src="smith_yaseen_15.png"> |
+| 16 | too-many-commits | <img src="smith_yaseen_16.png"> |
+| 17 | executable | <img src="smith_yaseen_17.png"> |
+| 18 | commit-parts | <img src="smith_yaseen_18.png"> |
+| 19 | pick-your-features | <img src="smith_yaseen_19.png"> |
+| 20 | rebase-complex | <img src="smith_yaseen_20.png"> |
+| 21 | invalid-order | <img src="smith_yaseen_21.png"> |
+| 22 | find-swearwords | <img src="smith_yaseen_22.png"> |
+| 23 | find-bug | <img src="smith_yaseen_23.png"> |
 
 > Add, remove, or update rows based on the exercises you completed.
 
