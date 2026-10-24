@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>Welcome to <strong>andOrderQ</strong>! Order food and track your ticket in real time.</p>
+
+<h2>Current Active Tickets</h2>
+<ul class="tickets">
+  {% for t in tickets %}
+  <li>
+    <a href="{{ url_for('ticket', ticket_id=t.number) }}">
+      Ticket #{{ t.number }} - {{ t.name }} ({{ t.status }})
+    </a>
+  </li>
+  {% else %}
+  <li>No active orders right now.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

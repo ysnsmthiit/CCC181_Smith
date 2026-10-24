@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket #{{ ticket_id }} · ClinicQ{% endblock %}
+
+{% block content %}
+{% if ticket %}
+<h2>Order Ticket #{{ ticket.number }}</h2>
+<p><strong>Customer Name:</strong> {{ ticket.name }}</p>
+<p><strong>Order Type:</strong> {{ ticket.order_type }}</p>
+<p><strong>Status:</strong> {{ ticket.status }}</p>
+{% else %}
+<h2>Ticket #{{ ticket_id }} Not Found</h2>
+<p>No active order matches this ticket number.</p>
+{% endif %}
+
+<p><a href="{{ url_for('index') }}">&larr; Back to the queue</a></p>
+{% endblock %}
