@@ -193,10 +193,10 @@ Save the files as `docs/week3/wireframes/` (PNG, JPG or PDF), for example `join-
 
 **Checkpoint 2**
 
-- [ ] Six frames: three screens, each at phone and laptop width.
-- [ ] Every frame names the persona, the device, and the requirement IDs.
-- [ ] The main flow for each persona is marked with arrows.
-- [ ] Committed in `docs/week3/wireframes/`.
+- [x] Six frames: three screens, each at phone and laptop width.
+- [x] Every frame names the persona, the device, and the requirement IDs.
+- [x] The main flow for each persona is marked with arrows.
+- [x] Committed in `docs/week3/wireframes/`.
 
 ---
 
@@ -767,8 +767,8 @@ Late work follows the late policy in the course syllabus.
 
 ## Checklist before you submit
 
-- [ ] My app shows my own system's name, services and fields, not ClinicQ's.
-- [ ] `docs/week3/personas.md` has my two personas, each with a real quote, scenario, top tasks and design rules.
+- [x] My app shows my own system's name, services and fields, not ClinicQ's.
+- [x] `docs/week3/personas.md` has my two personas, each with a real quote, scenario, top tasks and design rules.
 - [ ] Six wireframes are in `docs/week3/wireframes/`, and `feedback.md` has my self-review of all three screens.
 - [ ] Join, My place and Staff dashboard all work, on a phone width and a laptop width.
 - [ ] The join form validates every field on the server and keeps the user's input on error.
