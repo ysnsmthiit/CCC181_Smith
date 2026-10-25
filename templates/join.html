@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Join Queue · angOrderQ{% endblock %}
+
+{% block content %}
+<h2>Place an Order / Join Queue</h2>
+
+{% if errors %}
+<div class="error-banner" role="alert">
+  {% for err in errors %}
+  <p class="error">{{ err }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+
+<form method="post" class="join-form" novalidate>
+  <!-- Food Category Selector -->
+  <div class="form-group">
+    <label for="service_id">Food Category *</label>
+    <select id="service_id" name="service_id" required>
+      <option value="">-- Choose Category --</option>
+      {% for s in services %}
+      <option value="{{ s.id }}" {% if form_data.service_id|default('')|string==s.id|string %}selected{% endif %}>
+        {{ s.name }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Customer Name -->
+  <div class="form-group">
+    <label for="name">Your Name / Nickname *</label>
+    <input id="name" name="name" type="text" value="{{ form_data.name|default('') }}" placeholder="e.g. Marco" autofocus
+      required>
+  </div>
+
+  <!-- Email (Optional) -->
+  <div class="form-group">
+    <label for="email">Email (Optional)</label>
+    <input id="email" name="email" type="email" value="{{ form_data.email|default('') }}"
+      placeholder="name@example.com">
+    <small class="field-hint">Used for order ready notifications or receipt.</small>
+  </div>
+
+  <!-- Order Type -->
+  <fieldset class="form-group order-type-group">
+    <legend>Order Type *</legend>
+    <label class="radio-label" for="type_dinein">
+      <input type="radio" id="type_dinein" name="order_type" value="Dine-in" {% if
+        form_data.order_type|default('Dine-in')=='Dine-in' %}checked{% endif %}>
+      Dine-in
+    </label>
+    <label class="radio-label" for="type_takeout">
+      <input type="radio" id="type_takeout" name="order_type" value="Take-out" {% if
+        form_data.order_type|default('')=='Take-out' %}checked{% endif %}>
+      Take-out
+    </label>
+  </fieldset>
+
+  <!-- Submit Button -->
+  <button type="submit" class="button" aria-label="Submit order and get ticket number">Get Ticket / Join Queue</button>
+</form>
+
+<p><a href="{{ url_for('index') }}">&larr; Back to queue board</a></p>
+{% endblock %}

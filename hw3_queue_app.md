@@ -163,10 +163,10 @@ Rules for good personas:
 
 **Checkpoint 1**
 
-- [ ] `docs/week3/personas.md` has two complete personas: the person waiting and the staff member.
-- [ ] Each persona has a real quote, a scenario, a top-tasks table with requirement IDs, and at least three *"Because …, my interface must …"* statements.
-- [ ] No photo of a real person you interviewed is used.
-- [ ] Committed: `git commit -m "Add Week 3 personas (#<issue>)"`
+- [x] `docs/week3/personas.md` has two complete personas: the person waiting and the staff member.
+- [x] Each persona has a real quote, a scenario, a top-tasks table with requirement IDs, and at least three *"Because …, my interface must …"* statements.
+- [x] No photo of a real person you interviewed is used.
+- [x] Committed: `git commit -m "Add Week 3 personas (#<issue>)"`
 
 ---
 

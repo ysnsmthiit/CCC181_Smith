@@ -1,17 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Ticket #{{ ticket_id }} · ClinicQ{% endblock %}
+{% block title %}Ticket #{{ ticket.number }} · angOrderQ{% endblock %}
 
 {% block content %}
-{% if ticket %}
-<h2>Order Ticket #{{ ticket.number }}</h2>
-<p><strong>Customer Name:</strong> {{ ticket.name }}</p>
-<p><strong>Order Type:</strong> {{ ticket.order_type }}</p>
-<p><strong>Status:</strong> {{ ticket.status }}</p>
-{% else %}
-<h2>Ticket #{{ ticket_id }} Not Found</h2>
-<p>No active order matches this ticket number.</p>
-{% endif %}
+<div class="ticket-card">
+    <span class="status-badge status-{{ ticket.status }}">{{ ticket.status|upper }}</span>
+    <h2>Ticket #{{ ticket.number }}</h2>
+
+    {% if position %}
+    <p class="queue-position">
+        Hi <strong>{{ ticket.name }}</strong>! You are <strong>number {{ position }}</strong> in line.
+    </p>
+    {% else %}
+    <p class="queue-position">
+        Hi <strong>{{ ticket.name }}</strong>! Your order has been {{ ticket.status }}.
+    </p>
+    {% endif %}
+
+    <div class="ticket-details">
+        <p><strong>Category:</strong> {{ service.name if service else 'General' }}</p>
+        <p><strong>Order Type:</strong> {{ ticket.order_type }}</p>
+        {% if ticket.email %}
+        <p><strong>Email:</strong> {{ ticket.email }}</p>
+        {% endif %}
+    </div>
+</div>
+
 
 <p><a href="{{ url_for('index') }}">&larr; Back to the queue</a></p>
 {% endblock %}

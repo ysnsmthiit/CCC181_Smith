@@ -3,13 +3,18 @@
 {% block content %}
 <p>Welcome to <strong>andOrderQ</strong>! Order food and track your ticket in real time.</p>
 
-<h2>Current Active Tickets</h2>
+<p>
+  <a class="button" href="{{ url_for('join') }}">🍢 Order Food / Join Queue</a>
+</p>
+
+<h2>Current Active Orders</h2>
 <ul class="tickets">
   {% for t in tickets %}
   <li>
     <a href="{{ url_for('ticket', ticket_id=t.number) }}">
-      Ticket #{{ t.number }} - {{ t.name }} ({{ t.status }})
+      Ticket #{{ t.number }} - {{ t.name }}
     </a>
+    <span class="order-meta">({{ t.order_type }} • {{ t.status }})</span>
   </li>
   {% else %}
   <li>No active orders right now.</li>
