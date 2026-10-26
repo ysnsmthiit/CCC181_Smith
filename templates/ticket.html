@@ -14,20 +14,24 @@
                 <!-- Status Badge -->
                 <div class="mb-3">
                     {% if ticket.status == 'waiting' %}
-                    <span class="badge text-bg-warning fs-6 px-3 py-2 fw-semibold">Waiting</span>
+                    <span id="status-badge" class="badge text-bg-warning fs-6 px-3 py-2 fw-semibold">Waiting</span>
                     {% elif ticket.status == 'called' %}
-                    <span class="badge text-bg-primary fs-6 px-3 py-2 fw-semibold">Called / Ready for Pickup</span>
+                    <span id="status-badge" class="badge text-bg-primary fs-6 px-3 py-2 fw-semibold">Called / Ready for
+                        Pickup</span>
                     {% elif ticket.status == 'served' %}
-                    <span class="badge text-bg-success fs-6 px-3 py-2 fw-semibold">✓ Served / Completed</span>
+                    <span id="status-badge" class="badge text-bg-success fs-6 px-3 py-2 fw-semibold">✓ Served /
+                        Completed</span>
                     {% else %}
-                    <span class="badge text-bg-danger fs-6 px-3 py-2 fw-semibold">✖ Cancelled / No-Show</span>
+                    <span id="status-badge" class="badge text-bg-danger fs-6 px-3 py-2 fw-semibold">✖ Cancelled /
+                        No-Show</span>
                     {% endif %}
                 </div>
 
                 <!-- Large Ticket Number -->
                 <h1 class="display-1 fw-bold text-dark my-2">#{{ ticket.number }}</h1>
 
-                <div class="fs-5 text-secondary my-3">
+                <!-- Live Position Sentence -->
+                <div id="position-sentence" class="fs-5 text-secondary my-3">
                     {% if ticket.status == 'waiting' %}
                     {% if ahead == 0 %}
                     <strong class="text-success fs-4 d-block">You're next in line!</strong>
@@ -69,8 +73,10 @@
                 {% endif %}
             </div>
 
+            <!-- Cancel Button -->
             {% if ticket.status in ['waiting', 'called'] %}
-            <form method="post" action="{{ url_for('leave_queue', ticket_id=ticket.number) }}" class="mt-2"
+            <form id="cancel-form" method="post" action="{{ url_for('leave_queue', ticket_id=ticket.number) }}"
+                class="mt-2"
                 onsubmit="return confirm('Are you sure you want to cancel your order and leave the queue?');">
                 <button type="submit" class="btn btn-outline-danger btn-sm px-3"
                     aria-label="Cancel order and leave queue">
@@ -96,7 +102,7 @@
                         <div class="text-center pb-2 mb-2 border-bottom">
                             <span class="badge text-bg-warning text-uppercase px-2 py-1 fw-bold">Preparing</span>
                         </div>
-                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <div id="board-preparing" class="d-flex flex-wrap justify-content-center gap-2">
                             {% set waiting_tickets = tickets | selectattr('status', 'equalto', 'waiting') | list %}
                             {% for t in waiting_tickets %}
                             <div class="p-2 border rounded text-center {% if t.number == ticket.number %}border-2 border-warning bg-warning-subtle shadow-sm{% else %}bg-light{% endif %}"
@@ -117,7 +123,7 @@
                         <div class="text-center pb-2 mb-2 border-bottom">
                             <span class="badge text-bg-success text-uppercase px-2 py-1 fw-bold">Now Serving</span>
                         </div>
-                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <div id="board-called" class="d-flex flex-wrap justify-content-center gap-2">
                             {% set called_tickets = tickets | selectattr('status', 'equalto', 'called') | list %}
                             {% for t in called_tickets %}
                             <div class="p-2 border rounded text-center {% if t.number == ticket.number %}border-2 border-success bg-success-subtle shadow-sm{% else %}bg-light{% endif %}"
@@ -143,4 +149,89 @@
 
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const statusUrl = "{{ url_for('ticket_status', ticket_id=ticket.number) }}";
+    const serviceName = "{{ service.name }}";
+    const currentTicketNum = {{ ticket.number }};
+
+    async function refreshStatus() {
+        try {
+            const res = await fetch(statusUrl);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            const badge = document.getElementById("status-badge");
+            const sentence = document.getElementById("position-sentence");
+            const cancelForm = document.getElementById("cancel-form");
+            const boardPreparing = document.getElementById("board-preparing");
+            const boardCalled = document.getElementById("board-called");
+
+            // 1. Update Status Badge
+            if (badge) {
+                if (data.status === "waiting") {
+                    badge.className = "badge text-bg-warning fs-6 px-3 py-2 fw-semibold";
+                    badge.textContent = "Waiting";
+                } else if (data.status === "called") {
+                    badge.className = "badge text-bg-primary fs-6 px-3 py-2 fw-semibold";
+                    badge.textContent = "Called / Ready for Pickup";
+                } else if (data.status === "served") {
+                    badge.className = "badge text-bg-success fs-6 px-3 py-2 fw-semibold";
+                    badge.textContent = "✓ Served / Completed";
+                } else {
+                    badge.className = "badge text-bg-danger fs-6 px-3 py-2 fw-semibold";
+                    badge.textContent = "✖ Cancelled / No-Show";
+                }
+            }
+
+            // 2. Update Position Sentence
+            if (sentence) {
+                if (data.status === "waiting") {
+                    if (data.ahead === 0) {
+                        sentence.innerHTML = '<strong class="text-success fs-4 d-block">You\'re next in line!</strong><small class="text-muted">Please stay near the pickup counter.</small>';
+                    } else if (data.ahead === 1) {
+                        sentence.innerHTML = `<span><strong>1</strong> order ahead of you in ${serviceName}</span>`;
+                    } else {
+                        sentence.innerHTML = `<span><strong>${data.ahead}</strong> orders ahead of you in ${serviceName}</span>`;
+                    }
+                } else if (data.status === "called") {
+                    sentence.innerHTML = '<strong class="text-primary fs-4 d-block">Your order is ready!</strong><span>Please proceed to the stall counter to claim your food.</span>';
+                } else if (data.status === "served") {
+                    sentence.innerHTML = '<span class="text-success">Enjoy your food! Thank you for ordering with us.</span>';
+                    if (cancelForm) cancelForm.style.display = "none";
+                } else {
+                    sentence.innerHTML = '<span class="text-muted">This order was cancelled or marked as no-show.</span>';
+                    if (cancelForm) cancelForm.style.display = "none";
+                }
+            }
+
+            // 3. Update Live Status Board (Preparing vs Now Serving)
+            if (boardPreparing && data.waiting) {
+                boardPreparing.innerHTML = data.waiting.length ? data.waiting.map(num => `
+          <div class="p-2 border rounded text-center ${num === currentTicketNum ? 'border-2 border-warning bg-warning-subtle shadow-sm' : 'bg-light'}" style="min-width: 75px;">
+            <span class="fs-5 fw-bold d-block text-dark">#${num}</span>
+            ${num === currentTicketNum ? '<span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">YOU</span>' : ''}
+          </div>
+        `).join('') : '<small class="text-muted fst-italic py-2">None right now</small>';
+            }
+
+            if (boardCalled && data.called) {
+                boardCalled.innerHTML = data.called.length ? data.called.map(num => `
+          <div class="p-2 border rounded text-center ${num === currentTicketNum ? 'border-2 border-success bg-success-subtle shadow-sm' : 'bg-light'}" style="min-width: 75px;">
+            <span class="fs-5 fw-bold d-block text-dark">#${num}</span>
+            ${num === currentTicketNum ? '<span class="badge bg-success" style="font-size: 0.65rem;">YOU</span>' : ''}
+          </div>
+        `).join('') : '<small class="text-muted fst-italic py-2">None right now</small>';
+            }
+
+        } catch (err) {
+            console.warn("Could not refresh status", err);
+        }
+    }
+
+    // Poll status every 10 seconds
+    setInterval(refreshStatus, 10000);
+</script>
 {% endblock %}

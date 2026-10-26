@@ -64,6 +64,31 @@ def ticket(ticket_id):
     )
 
 
+@app.get("/queue/<int:ticket_id>/status.json")
+def ticket_status(ticket_id):
+    t = next((t for t in TICKETS if t["number"] == ticket_id), None)
+    if t is None:
+        abort(404)
+        
+    ahead = sum(
+        1 for x in TICKETS
+        if x["service_id"] == t["service_id"]
+        and x["status"] == "waiting"
+        and x["number"] < t["number"]
+    )
+    
+    # Active ticket numbers for the live claim board
+    waiting_numbers = [x["number"] for x in TICKETS if x["status"] == "waiting"]
+    called_numbers = [x["number"] for x in TICKETS if x["status"] == "called"]
+
+    return {
+        "status": t["status"],
+        "ahead": ahead,
+        "waiting": waiting_numbers,
+        "called": called_numbers,
+    }
+
+
 @app.post("/queue/<int:ticket_id>/leave")
 def leave_queue(ticket_id):
     t = next((t for t in TICKETS if t["number"] == ticket_id), None)
