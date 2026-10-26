@@ -223,9 +223,9 @@ Update your wireframes with the changes before you start Part 4.
 
 **Checkpoint 3**
 
-- [ ] `docs/week3/feedback.md` has a review of all three screens in the *Works well / Problem / Change* format.
-- [ ] Your wireframes are updated, or `feedback.md` explains why you kept them.
-- [ ] Committed.
+- [x] `docs/week3/feedback.md` has a review of all three screens in the *Works well / Problem / Change* format.
+- [x] Your wireframes are updated, or `feedback.md` explains why you kept them.
+- [x] Committed.
 
 ---
 
@@ -330,10 +330,10 @@ Make the home page (`index.html`) a short welcome for the person waiting: your a
 
 **Checkpoint 4**
 
-- [ ] Every page shows the navbar, flash area and footer from `base.html`.
-- [ ] In Chrome DevTools device mode (Ctrl+Shift+M), at 375 px wide the menu collapses into ☰ and opens when tapped.
-- [ ] The active page is highlighted in the menu.
-- [ ] Committed: `git commit -m "Add Bootstrap layout and navigation (#<issue>)"`
+- [x] Every page shows the navbar, flash area and footer from `base.html`.
+- [x] In Chrome DevTools device mode (Ctrl+Shift+M), at 375 px wide the menu collapses into ☰ and opens when tapped.
+- [x] The active page is highlighted in the menu.
+- [x] Committed: `git commit -m "Add Bootstrap layout and navigation (#<issue>)"`
 
 ---
 

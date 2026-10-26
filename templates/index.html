@@ -1,23 +1,20 @@
 {% extends "base.html" %}
 
+{% block title %}Welcome · angOrderQ{% endblock %}
+
 {% block content %}
-<p>Welcome to <strong>andOrderQ</strong>! Order food and track your ticket in real time.</p>
-
-<p>
-  <a class="button" href="{{ url_for('join') }}">🍢 Order Food / Join Queue</a>
-</p>
-
-<h2>Current Active Orders</h2>
-<ul class="tickets">
-  {% for t in tickets %}
-  <li>
-    <a href="{{ url_for('ticket', ticket_id=t.number) }}">
-      Ticket #{{ t.number }} - {{ t.name }}
-    </a>
-    <span class="order-meta">({{ t.order_type }} • {{ t.status }})</span>
-  </li>
-  {% else %}
-  <li>No active orders right now.</li>
-  {% endfor %}
-</ul>
+<div class="p-5 my-4 bg-white rounded-3 text-center border shadow-sm">
+  <div class="container-fluid py-3">
+    <h1 class="display-5 fw-bold text-dark">🍢 angOrderQ</h1>
+    <p class="col-md-8 mx-auto fs-5 text-muted my-3">
+      Skip standing in the smoke and crowd at the counter! Place your food order, browse stalls and vendors freely,
+      and track your queue ticket live on your phone.
+    </p>
+    <div class="mt-4">
+      <a class="btn btn-maroon btn-lg px-4 py-2 fw-semibold shadow-sm" href="{{ url_for('join_form') }}" role="button">
+        Join the queue
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,12 +1,13 @@
-"""CCC181 Week 2: a "Hello, Flask" starter app.
+"""angOrderQ: Order Queue System for Local Stalls & Vendors.
 
 Run it with:
     flask --app app run --debug
 then open http://127.0.0.1:5000
 """
-from flask import Flask, abort, redirect, render_template, request, url_for
+from flask import Flask, abort, flash, redirect, render_template, request, url_for
 
 app = Flask(__name__)
+app.secret_key = "dev-only-change-me"  # Secret key for flash messages
 
 # Categories of items offered by the pop-up stall
 SERVICES = [
@@ -39,9 +40,7 @@ TICKETS = [
 
 @app.route("/")
 def index():
-    # render_template looks inside the templates/ folder and passes
-    # keyword arguments to the template as variables.
-    return render_template("index.html", services=SERVICES, tickets=TICKETS)
+    return render_template("index.html")
 
 
 @app.route("/queue/<int:ticket_id>")
@@ -70,55 +69,20 @@ def ticket(ticket_id):
     )
 
 
-@app.route("/join", methods=["GET", "POST"])
-def join():
-    if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip()
-        order_type = request.form.get("order_type", "Dine-in").strip()
-        service_id_raw = request.form.get("service_id", "").strip()
+@app.route("/join")
+def join_form():
+    return render_template("join.html", services=SERVICES, form_data={}, errors=[])
 
-        errors = []
-        if not name:
-            errors.append("Please enter your name.")
 
-        try:
-            service_id = int(service_id_raw)
-            if not any(s["id"] == service_id for s in SERVICES):
-                errors.append("Please select a valid service category.")
-        except (ValueError, TypeError):
-            errors.append("Please select a service category.")
-
-        if errors:
-            return render_template(
-                "join.html",
-                errors=errors,
-                services=SERVICES,
-                form_data=request.form
-            ), 400
-
-        next_number = TICKETS[-1]["number"] + 1 if TICKETS else 101
-        new_ticket = {
-            "number": next_number,
-            "name": name,
-            "email": email,
-            "service_id": service_id,
-            "order_type": order_type if order_type in ("Dine-in", "Take-out") else "Dine-in",
-            "status": "waiting",
-        }
-        TICKETS.append(new_ticket)
-        # Redirect after POST to prevent duplicate submissions on refresh
-        return redirect(url_for("ticket", ticket_id=next_number))
-
-    return render_template("join.html", services=SERVICES, form_data={})
+@app.route("/staff")
+def staff_dashboard():
+    return "Staff dashboard coming soon"
 
 
 @app.route("/hello")
 def hello():
-    # The plain-string version from the Routes slide.
     return "Hello, CCC181!"
 
 
 if __name__ == "__main__":
-    # Lets you also start the app with: python app.py
     app.run(debug=True)
