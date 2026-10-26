@@ -473,10 +473,10 @@ Wrap the status and position in an element with an id, such as `<div id="live-st
 
 **Checkpoint 6**
 
-- [ ] My place shows number, service, status badge and position, and reads clearly at 375 px.
-- [ ] Visiting a ticket number that does not exist shows a 404.
-- [ ] Leave the queue works and shows a flash message.
-- [ ] Committed.
+- [x] My place shows number, service, status badge and position, and reads clearly at 375 px.
+- [x] Visiting a ticket number that does not exist shows a 404.
+- [x] Leave the queue works and shows a flash message.
+- [x] Committed.
 
 ---
 

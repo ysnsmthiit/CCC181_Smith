@@ -3,29 +3,144 @@
 {% block title %}Ticket #{{ ticket.number }} · angOrderQ{% endblock %}
 
 {% block content %}
-<div class="ticket-card">
-    <span class="status-badge status-{{ ticket.status }}">{{ ticket.status|upper }}</span>
-    <h2>Ticket #{{ ticket.number }}</h2>
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
 
-    {% if position %}
-    <p class="queue-position">
-        Hi <strong>{{ ticket.name }}</strong>! You are <strong>number {{ position }}</strong> in line.
-    </p>
-    {% else %}
-    <p class="queue-position">
-        Hi <strong>{{ ticket.name }}</strong>! Your order has been {{ ticket.status }}.
-    </p>
-    {% endif %}
+        <!-- Main Ticket Card -->
+        <div class="card shadow-sm border-0 text-center p-4 bg-white mb-4">
 
-    <div class="ticket-details">
-        <p><strong>Category:</strong> {{ service.name if service else 'General' }}</p>
-        <p><strong>Order Type:</strong> {{ ticket.order_type }}</p>
-        {% if ticket.email %}
-        <p><strong>Email:</strong> {{ ticket.email }}</p>
-        {% endif %}
+            <!-- Live Status Container -->
+            <div id="live-status" aria-live="polite">
+                <!-- Status Badge -->
+                <div class="mb-3">
+                    {% if ticket.status == 'waiting' %}
+                    <span class="badge text-bg-warning fs-6 px-3 py-2 fw-semibold">Waiting</span>
+                    {% elif ticket.status == 'called' %}
+                    <span class="badge text-bg-primary fs-6 px-3 py-2 fw-semibold">Called / Ready for Pickup</span>
+                    {% elif ticket.status == 'served' %}
+                    <span class="badge text-bg-success fs-6 px-3 py-2 fw-semibold">✓ Served / Completed</span>
+                    {% else %}
+                    <span class="badge text-bg-danger fs-6 px-3 py-2 fw-semibold">✖ Cancelled / No-Show</span>
+                    {% endif %}
+                </div>
+
+                <!-- Large Ticket Number -->
+                <h1 class="display-1 fw-bold text-dark my-2">#{{ ticket.number }}</h1>
+
+                <div class="fs-5 text-secondary my-3">
+                    {% if ticket.status == 'waiting' %}
+                    {% if ahead == 0 %}
+                    <strong class="text-success fs-4 d-block">You're next in line!</strong>
+                    <small class="text-muted">Please stay near the pickup counter.</small>
+                    {% elif ahead == 1 %}
+                    <span><strong>1</strong> order ahead of you in {{ service.name }}</span>
+                    {% else %}
+                    <span><strong>{{ ahead }}</strong> orders ahead of you in {{ service.name }}</span>
+                    {% endif %}
+                    {% elif ticket.status == 'called' %}
+                    <strong class="text-primary fs-4 d-block">Your order is ready!</strong>
+                    <span>Please proceed to the stall counter to claim your food.</span>
+                    {% elif ticket.status == 'served' %}
+                    <span class="text-success">Enjoy your food! Thank you for ordering with us.</span>
+                    {% else %}
+                    <span class="text-muted">This order was cancelled or marked as no-show.</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="bg-light p-3 rounded-3 text-start small border my-3">
+                <div class="d-flex justify-content-between py-1">
+                    <span class="text-muted">Customer:</span>
+                    <span class="fw-semibold text-dark">{{ ticket.name }}</span>
+                </div>
+                <div class="d-flex justify-content-between py-1 border-top">
+                    <span class="text-muted">Category:</span>
+                    <span class="fw-semibold text-dark">{{ service.name }}</span>
+                </div>
+                <div class="d-flex justify-content-between py-1 border-top">
+                    <span class="text-muted">Order Type:</span>
+                    <span class="badge bg-secondary">{{ ticket.order_type }}</span>
+                </div>
+                {% if ticket.email %}
+                <div class="d-flex justify-content-between py-1 border-top">
+                    <span class="text-muted">Receipt Email:</span>
+                    <span class="text-truncate ps-2">{{ ticket.email }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if ticket.status in ['waiting', 'called'] %}
+            <form method="post" action="{{ url_for('leave_queue', ticket_id=ticket.number) }}" class="mt-2"
+                onsubmit="return confirm('Are you sure you want to cancel your order and leave the queue?');">
+                <button type="submit" class="btn btn-outline-danger btn-sm px-3"
+                    aria-label="Cancel order and leave queue">
+                    Cancel Order / Leave the queue
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+
+        <!-- Live Claim Board -->
+        <div class="card shadow-sm border-0 bg-white overflow-hidden mb-4">
+            <div class="card-header bg-dark text-white text-center py-2">
+                <h2 class="h6 mb-0 text-uppercase fw-bold letter-spacing-1">
+                    Live Order Status Board
+                </h2>
+            </div>
+            <div class="card-body p-3">
+                <div class="row g-3">
+
+                    <!-- Column 1: Preparing / Waiting -->
+                    <div class="col-6 border-end">
+                        <div class="text-center pb-2 mb-2 border-bottom">
+                            <span class="badge text-bg-warning text-uppercase px-2 py-1 fw-bold">Preparing</span>
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            {% set waiting_tickets = tickets | selectattr('status', 'equalto', 'waiting') | list %}
+                            {% for t in waiting_tickets %}
+                            <div class="p-2 border rounded text-center {% if t.number == ticket.number %}border-2 border-warning bg-warning-subtle shadow-sm{% else %}bg-light{% endif %}"
+                                style="min-width: 75px;">
+                                <span class="fs-5 fw-bold d-block text-dark">#{{ t.number }}</span>
+                                {% if t.number == ticket.number %}
+                                <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">YOU</span>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <small class="text-muted fst-italic py-2">None right now</small>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Now Serving / Called -->
+                    <div class="col-6">
+                        <div class="text-center pb-2 mb-2 border-bottom">
+                            <span class="badge text-bg-success text-uppercase px-2 py-1 fw-bold">Now Serving</span>
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            {% set called_tickets = tickets | selectattr('status', 'equalto', 'called') | list %}
+                            {% for t in called_tickets %}
+                            <div class="p-2 border rounded text-center {% if t.number == ticket.number %}border-2 border-success bg-success-subtle shadow-sm{% else %}bg-light{% endif %}"
+                                style="min-width: 75px;">
+                                <span class="fs-5 fw-bold d-block text-dark">#{{ t.number }}</span>
+                                {% if t.number == ticket.number %}
+                                <span class="badge bg-success" style="font-size: 0.65rem;">YOU</span>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                            <small class="text-muted fst-italic py-2">None right now</small>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <a href="{{ url_for('index') }}" class="text-decoration-none small text-muted">&larr; Back to home</a>
+        </div>
+
     </div>
 </div>
-
-
-<p><a href="{{ url_for('index') }}">&larr; Back to the queue</a></p>
 {% endblock %}

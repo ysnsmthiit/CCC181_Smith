@@ -15,8 +15,6 @@ SERVICES = [
     {"id": 3, "name": "Snacks & Sides"},
 ]
 
-# Sample active tickets with custom 'order_type' field
-# status must be one of: 'waiting', 'called', 'served', 'no-show'
 TICKETS = [
     {
         "number": 101,
@@ -42,27 +40,39 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/queue/<int:ticket_id>")
+@app.get("/queue/<int:ticket_id>")
 def ticket(ticket_id):
-    target_ticket = next((t for t in TICKETS if t["number"] == ticket_id), None)
-    if not target_ticket:
+    t = next((t for t in TICKETS if t["number"] == ticket_id), None)
+    if t is None:
         abort(404)
 
-    active_queue = [t for t in TICKETS if t.get("status") in ("waiting", "called")]
-    position = None
-    for idx, t in enumerate(active_queue, start=1):
-        if t["number"] == ticket_id:
-            position = idx
-            break
-
-    service = next((s for s in SERVICES if s["id"] == target_ticket.get("service_id")), None)
+    # Count how many tickets for the same service are still waiting ahead of this one
+    ahead = [
+        x for x in TICKETS
+        if x["service_id"] == t["service_id"]
+        and x["status"] == "waiting"
+        and x["number"] < t["number"]
+    ]
+    service = next((s for s in SERVICES if s["id"] == t["service_id"]), None)
 
     return render_template(
         "ticket.html",
-        ticket=target_ticket,
-        position=position,
-        service=service
+        ticket=t,
+        service=service,
+        ahead=len(ahead),
+        tickets=TICKETS  # Passed for the live claim board
     )
+
+
+@app.post("/queue/<int:ticket_id>/leave")
+def leave_queue(ticket_id):
+    t = next((t for t in TICKETS if t["number"] == ticket_id), None)
+    if t is None:
+        abort(404)
+
+    t["status"] = "no-show"
+    flash(f"Order #{ticket_id} was cancelled. You have left the queue.", "info")
+    return redirect(url_for("index"))
 
 
 @app.get("/join")
