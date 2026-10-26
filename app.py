@@ -118,9 +118,56 @@ def join():
     return redirect(url_for("ticket", ticket_id=number))
 
 
-@app.route("/staff")
+@app.get("/staff")
 def staff_dashboard():
-    return "Staff dashboard coming soon"
+    service_id = request.args.get("service_id", type=int)
+    
+    # Active orders only: 'waiting' or 'called'
+    queue = [t for t in TICKETS if t["status"] in ("waiting", "called")]
+    if service_id:
+        queue = [t for t in queue if t["service_id"] == service_id]
+        
+    names = {s["id"]: s["name"] for s in SERVICES}
+
+    # ★ Feature: Live waiting counts per food category for kitchen staff
+    counts = {
+        s["id"]: sum(1 for t in TICKETS if t["service_id"] == s["id"] and t["status"] in ("waiting", "called"))
+        for s in SERVICES
+    }
+    total_active = sum(1 for t in TICKETS if t["status"] in ("waiting", "called"))
+
+    return render_template(
+        "staff.html",
+        queue=queue,
+        services=SERVICES,
+        names=names,
+        selected=service_id,
+        counts=counts,
+        total_active=total_active,
+    )
+
+
+@app.post("/staff/tickets/<int:ticket_id>/<action>")
+def staff_action(ticket_id, action):
+    action_map = {
+        "call": "called",
+        "serve": "served",
+        "no-show": "no-show"
+    }
+    new_status = action_map.get(action)
+    t = next((t for t in TICKETS if t["number"] == ticket_id), None)
+    
+    if t is None or new_status is None:
+        abort(404)
+        
+    t["status"] = new_status
+    flash(f"Order #{ticket_id} ({t['name']}) marked as {new_status.title()}.", "info")
+
+    # Retain the active category filter if staff was viewing one
+    service_id = request.args.get("service_id", type=int)
+    if service_id:
+        return redirect(url_for("staff_dashboard", service_id=service_id))
+    return redirect(url_for("staff_dashboard"))
 
 
 @app.route("/hello")

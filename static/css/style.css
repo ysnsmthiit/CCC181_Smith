@@ -54,3 +54,23 @@ body {
   border-color: var(--maroon);
   color: #FFFFFF;
 }
+
+.nav-pills .nav-link {
+  color: var(--maroon);
+  font-weight: 500;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: #F3E8E8;
+  color: var(--maroon-dark);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--maroon);
+  color: #FFFFFF;
+}
+
+.nav-pills .nav-link.active .badge {
+  background-color: #FFFFFF !important;
+  color: var(--maroon-dark) !important;
+}

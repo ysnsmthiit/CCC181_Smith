@@ -523,11 +523,11 @@ Staff login comes in a later week. For now the dashboard is open; say so in your
 
 **Checkpoint 7**
 
-- [ ] The dashboard lists waiting and called tickets in order and filters by service.
-- [ ] Call next, Serve and No-show change the status, and the change shows on that ticket's My place page.
-- [ ] At 375 px the table scrolls sideways inside its box instead of breaking the page.
-- [ ] One ★ requirement from your setting is visible on the dashboard.
-- [ ] Committed.
+- [x] The dashboard lists waiting and called tickets in order and filters by service.
+- [x] Call next, Serve and No-show change the status, and the change shows on that ticket's My place page.
+- [x] At 375 px the table scrolls sideways inside its box instead of breaking the page.
+- [x] One ★ requirement from your setting is visible on the dashboard.
+- [x] Committed.
 
 ---
 
