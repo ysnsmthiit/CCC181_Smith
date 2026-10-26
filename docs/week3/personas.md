@@ -8,7 +8,7 @@
 
 | | |
 | --- | --- |
-| **Photo or sketch** | <img src="marcoLOL.png"> |
+| **Photo or sketch** | <img src="screenshots/marcoLOL.png"> |
 | **Age, role and background** | 21, 3rd-year university student; frequents night market stalls and food strips with classmates after late classes to grab cheap dinner. |
 | **Goals** | 1. Order a hot meal combo and snack quickly without standing pressed against a crowd near the hot grill *(observation)*.<br>2. Check queue progress remotely so he can sit with friends or browse adjacent stalls while waiting *(observation)*.<br>3. Receive a clear visual alert on his phone screen when his meal is ready for collection. |
 | **Frustrations** | 1. Having to stand in the heat, smoke, and noise just to listen for shouted order numbers *(observation)*.<br>2. Uncertainty about wait times—not knowing whether "preparing" means 3 minutes or 20 minutes. |
@@ -42,7 +42,7 @@ Marco and his friends arrive at a bustling food bazaar during peak dinner rush. 
 
 | | |
 | --- | --- |
-| **Photo or sketch** | <img src="ateGina.webp"> |
+| **Photo or sketch** | <img src="screenshots/ategina.webp"> |
 | **Age, role and background** | 46, food stall owner and lead cook; runs the pop-up stall 6 evenings a week, managing inventory, frying, and serving customers. |
 | **Goals** | 1. Keep track of customer orders in real time without handing out heavy metal table number stands or dealing with paper order slips *(observation)*.<br>2. Alert waiting customers that their meal is ready without having to shout over sizzling oil and exhaust fans.<br>3. Keep line turnover fast and identify customers who abandon their orders or fail to show up. |
 | **Frustrations** | 1. Shouting numbers repeatedly over market chatter, music, and kitchen noise, only for the customer to have wandered off *(observation)*.<br>2. Customers constantly crowding the counter asking, "Is my order ready yet?" while she is trying to cook |

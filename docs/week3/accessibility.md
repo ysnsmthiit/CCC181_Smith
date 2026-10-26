@@ -20,16 +20,16 @@ Audits were performed using Google Chrome Lighthouse under **Mobile** simulation
 ### Final Audit Screenshots
 
 #### 1. Join Screen (`/join`) — Score: 100
-![Join Screen Lighthouse Audit](lighthouse-join.png)
+![Join Screen Lighthouse Audit](screenshots/lighthouse-join.png)
 
 #### 2. My Place Screen (`/queue/101`) — Score: 100
-![My Place Screen Lighthouse Audit](lighthouse-ticket.png)
+![My Place Screen Lighthouse Audit](screenshots/lighthouse-ticket.png)
 
 #### 3. Initial Staff Dashboard Screen (`/staff`) — Score: 94
-![Initial Staff Dashboard Screen Lighthouse Audit](lighthouse-staff.png)
+![Initial Staff Dashboard Screen Lighthouse Audit](screenshots/lighthouse-staff.png)
 
 #### 4. Final Staff Dashboard Screen (`/staff`) — Score: 100
-![Final Staff Dashboard Screen Lighthouse Audit](lighthouse-staff-fixed.png)
+![Final Staff Dashboard Screen Lighthouse Audit](screenshots/lighthouse-staff-fixed.png)
 
 ---
 
