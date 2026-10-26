@@ -11,7 +11,7 @@
             <h1 class="h3 fw-bold mb-1 text-dark">STAFF ORDER BOARD</h1>
             {% set waiting_count = queue | selectattr('status', 'equalto', 'waiting') | list | length %}
             {% set called_count = queue | selectattr('status', 'equalto', 'called') | list | length %}
-            <p class="text-secondary fw-semibold mb-0">
+            <p class="text-dark fw-semibold mb-0">
                 Orders ({{ queue|length }}) &bull; Waiting ({{ waiting_count }}) &bull; Ready ({{ called_count }})
             </p>
         </div>
@@ -39,7 +39,7 @@
         <div class="mb-4">
             <div class="d-flex align-items-center gap-2 overflow-x-auto pb-2"
                 style="white-space: nowrap; scrollbar-width: thin;">
-                <span class="small fw-bold text-muted text-uppercase me-1">Queue Filter:</span>
+                <span class="small fw-bold text-dark text-uppercase me-1">Queue Filter:</span>
                 <a href="{{ url_for('staff_dashboard') }}"
                     class="btn btn-sm {% if not selected %}btn-dark text-white fw-bold{% else %}btn-outline-secondary bg-white text-dark{% endif %} rounded-pill px-3 shadow-sm">
                     All ({{ total_active }})
@@ -69,7 +69,7 @@
                             {% if t.status == 'waiting' %}
                             <span class="badge text-bg-warning fw-bold px-2 py-1 fs-6">WAITING</span>
                             {% elif t.status == 'called' %}
-                            <span class="badge text-bg-success fw-bold px-2 py-1 fs-6">CALLED / READY</span>
+                            <span class="badge badge-called fw-bold px-2 py-1 fs-6">CALLED / READY</span>
                             {% else %}
                             <span class="badge text-bg-secondary fw-bold px-2 py-1 fs-6">{{ t.status|upper }}</span>
                             {% endif %}
@@ -78,7 +78,7 @@
                         <form method="post"
                             action="{{ url_for('staff_action', ticket_id=t.number, action='no-show', service_id=selected) }}"
                             onsubmit="return confirm('Cancel ticket #{{ t.number }}?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm px-3 fw-semibold"
+                            <button type="submit" class="btn btn-cancel btn-sm px-3 fw-semibold"
                                 aria-label="Cancel ticket {{ t.number }}">
                                 ✕ Cancel
                             </button>
@@ -88,7 +88,7 @@
                     <p class="fs-5 mb-3 text-dark">
                         <strong>{{ t.name }}</strong> &bull;
                         <span class="badge text-bg-light border text-dark">{{ t.order_type }}</span> &bull;
-                        <span class="text-secondary fw-semibold">{{ names.get(t.service_id, 'Other') }}</span>
+                        <span class="text-dark fw-medium">{{ names.get(t.service_id, 'Other') }}</span>
                         {% if t.email %}
                         <small class="text-muted d-block d-md-inline ms-md-2">({{ t.email }})</small>
                         {% endif %}
@@ -103,7 +103,6 @@
                                     aria-label="Call ticket #{{ t.number }} for {{ t.name }}">
                                     Call
                                 </button>
-
                             </form>
                             {% else %}
                             <form method="post"
@@ -135,7 +134,7 @@
         <!-- Empty State -->
         <div class="card shadow-sm border-0 text-center py-5 px-3 bg-white">
             <h3 class="h5 fw-bold text-dark mb-1">All caught up!</h3>
-            <p class="text-secondary small mb-3">No active orders right now.</p>
+            <p class="text-dark small mb-3">No active orders right now.</p>
             {% if selected %}
             <a href="{{ url_for('staff_dashboard') }}" class="btn btn-sm btn-outline-secondary mx-auto">
                 View All Categories

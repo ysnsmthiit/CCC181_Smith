@@ -74,3 +74,29 @@ body {
   background-color: #FFFFFF !important;
   color: var(--maroon-dark) !important;
 }
+
+/* High-contrast keyboard focus indicators (WCAG 2.4.7 Focus Visible) */
+:focus-visible {
+  outline: 3px solid #111827 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px #F59E0B !important;
+}
+
+/* High-contrast accessible badges & buttons (Passes WCAG AAA) */
+.badge-called {
+  background-color: #14532D !important;
+  color: #FFFFFF !important;
+}
+
+.btn-cancel {
+  color: #991B1B !important;
+  border: 1px solid #991B1B !important;
+  background-color: #FFFFFF;
+}
+
+.btn-cancel:hover,
+.btn-cancel:focus {
+  background-color: #FEE2E2 !important;
+  color: #7F1D1D !important;
+  border-color: #7F1D1D !important;
+}

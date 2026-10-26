@@ -624,9 +624,9 @@ Can you see where the focus is at every step? Can you reach and use every contro
 
 **Checkpoint 9**
 
-- [ ] `docs/week3/accessibility.md` has a Lighthouse score and screenshot for each screen, the keyboard test notes, and the completed checklist.
-- [ ] Each screen scores 90 or higher, or the file explains what is left and why.
-- [ ] Committed.
+- [x] `docs/week3/accessibility.md` has a Lighthouse score and screenshot for each screen, the keyboard test notes, and the completed checklist.
+- [x] Each screen scores 90 or higher, or the file explains what is left and why.
+- [x] Committed.
 
 ---
 

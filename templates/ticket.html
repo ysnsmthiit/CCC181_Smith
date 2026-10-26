@@ -78,10 +78,11 @@
             <form id="cancel-form" method="post" action="{{ url_for('leave_queue', ticket_id=ticket.number) }}"
                 class="mt-2"
                 onsubmit="return confirm('Are you sure you want to cancel your order and leave the queue?');">
-                <button type="submit" class="btn btn-outline-danger btn-sm px-3"
+                <button type="submit" class="btn btn-outline-danger btn-sm px-3 py-2"
                     aria-label="Cancel order and leave queue">
                     Cancel Order / Leave the queue
                 </button>
+
             </form>
             {% endif %}
 

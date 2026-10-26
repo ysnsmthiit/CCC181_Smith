@@ -56,8 +56,8 @@
         </div>
 
         <!-- Custom Food Stall Field: Order Type (Dine-in vs Take-out) -->
-        <div class="mb-4">
-          <label class="form-label fw-semibold d-block">Order Type *</label>
+        <fieldset class="mb-4">
+          <legend class="form-label fw-semibold d-block mb-2">Order Type *</legend>
           <div class="form-check form-check-inline">
             <input class="form-check-input {% if errors and errors.order_type %}is-invalid{% endif %}" type="radio"
               name="order_type" id="type_dinein" value="Dine-in" {% if form.get('order_type', 'Dine-in' )=='Dine-in'
@@ -73,7 +73,8 @@
           {% if errors and errors.order_type %}
           <div class="invalid-feedback d-block">{{ errors.order_type }}</div>
           {% endif %}
-        </div>
+        </fieldset>
+
 
         <!-- Submit Button -->
         <button type="submit" class="btn btn-maroon btn-lg w-100 fw-semibold shadow-sm"
