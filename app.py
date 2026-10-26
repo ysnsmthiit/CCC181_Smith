@@ -9,7 +9,6 @@ from flask import Flask, abort, flash, redirect, render_template, request, url_f
 app = Flask(__name__)
 app.secret_key = "dev-only-change-me"  # Secret key for flash messages
 
-# Categories of items offered by the pop-up stall
 SERVICES = [
     {"id": 1, "name": "Meals & Combos"},
     {"id": 2, "name": "Drinks & Beverages"},
@@ -45,12 +44,10 @@ def index():
 
 @app.route("/queue/<int:ticket_id>")
 def ticket(ticket_id):
-    # Find the target ticket or 404
     target_ticket = next((t for t in TICKETS if t["number"] == ticket_id), None)
     if not target_ticket:
         abort(404)
 
-    # Calculate queue position among active waiting/called tickets
     active_queue = [t for t in TICKETS if t.get("status") in ("waiting", "called")]
     position = None
     for idx, t in enumerate(active_queue, start=1):
@@ -58,7 +55,6 @@ def ticket(ticket_id):
             position = idx
             break
 
-    # Look up the service name
     service = next((s for s in SERVICES if s["id"] == target_ticket.get("service_id")), None)
 
     return render_template(
@@ -69,9 +65,47 @@ def ticket(ticket_id):
     )
 
 
-@app.route("/join")
+@app.get("/join")
 def join_form():
-    return render_template("join.html", services=SERVICES, form_data={}, errors=[])
+    return render_template("join.html", services=SERVICES, form={}, errors={})
+
+
+@app.post("/join")
+def join():
+    form = request.form
+    name = form.get("name", "").strip()
+    email = form.get("email", "").strip().lower()
+    service_id = form.get("service_id", type=int)
+    order_type = form.get("order_type", "").strip()
+
+    errors = {}
+    if not name:
+        errors["name"] = "Enter your name or nickname."
+
+    if not email or "@" not in email or "." not in email:
+        errors["email"] = "Enter a valid email address (e.g. name@example.com)."
+
+    if service_id not in [s["id"] for s in SERVICES]:
+        errors["service_id"] = "Choose a food category."
+
+    if order_type not in ["Dine-in", "Take-out"]:
+        errors["order_type"] = "Select either Dine-in or Take-out."
+
+    if errors:
+        flash("Please fix the highlighted fields below.", "danger")
+        return render_template("join.html", services=SERVICES, form=form, errors=errors), 400
+
+    number = TICKETS[-1]["number"] + 1 if TICKETS else 101
+    TICKETS.append({
+        "number": number,
+        "name": name,
+        "email": email,
+        "service_id": service_id,
+        "order_type": order_type,
+        "status": "waiting"
+    })
+    flash(f"You joined the queue! Your ticket number is #{number}.", "success")
+    return redirect(url_for("ticket", ticket_id=number))
 
 
 @app.route("/staff")

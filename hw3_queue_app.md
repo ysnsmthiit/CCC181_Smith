@@ -434,10 +434,10 @@ What to notice:
 
 **Checkpoint 5**
 
-- [ ] Submitting an empty form shows a red alert and a message under each wrong field, and keeps the typed values.
-- [ ] A valid submission redirects to My place with a green success alert.
-- [ ] At least one field specific to your setting is in the form and validated on the server.
-- [ ] Committed.
+- [x] Submitting an empty form shows a red alert and a message under each wrong field, and keeps the typed values.
+- [x] A valid submission redirects to My place with a green success alert.
+- [x] At least one field specific to your setting is in the form and validated on the server.
+- [x] Committed.
 
 ---
 
