@@ -7,7 +7,7 @@
 - **Student ID:** 2024-1729
 - **Section:** CS3A
 - **Date:** October 26, 2026
-- **Pull Request Link:** [Pull Request #1: Week 3 First Interface](https://github.com/ysnsmthiit/CCC181_Smith/pull/1)
+- **Pull Request Link:** [Pull Request #2: Week 3 First Interface](https://github.com/ysnsmthiit/CCC181_Smith/pull/2)
 
 ---
 
