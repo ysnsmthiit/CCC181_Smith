@@ -4,10 +4,24 @@ Run it with:
     flask --app app run --debug
 then open http://127.0.0.1:5000
 """
+import os
+from dotenv import load_dotenv
 from flask import Flask, abort, flash, redirect, render_template, request, url_for
+from flask_migrate import Migrate
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
+
+from models import Service, Ticket, User, db
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "dev-only-change-me"  # Secret key for flash messages
+app.secret_key = "dev-only-change-me"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+app.config["SQLALCHEMY_ECHO"] = os.environ.get("SQLALCHEMY_ECHO") == "1"
+
+db.init_app(app)
+migrate = Migrate(app, db)
 
 SERVICES = [
     {"id": 1, "name": "Meals & Combos"},
