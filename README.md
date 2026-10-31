@@ -1,17 +1,22 @@
 # angOrderQ
 
-> Real-Time Order Queue System for Local Pop-up Food Stalls & Night Market Vendors.
+> Real-Time Order Queue System for Local Food Stalls & Pop-up Vendors.
 
 Built for **CCC181**.
 
 ---
 
 ## About the Setting
-**angOrderQ** is designed for bustling outdoor food bazaars, night markets, and street pop-up stalls. 
+**angOrderQ** is designed for bustling local food stalls, kiosks, and pop-up food vendors. 
 - **For Customers:** Place quick food orders from your phone, choose Dine-in or Take-out, and monitor your queue position remotely via a live Jollibee-style claim board without having to crowd around smoky fryers.
 - **For Stall Operators:** A fat-finger-friendly tablet dashboard designed for greasy hands and fast kitchen turnover, featuring category filtering, live wait counts, and one-tap order calling and completion.
 
 *Note: Staff authentication will be introduced in a future update. For MVP testing, the Staff Dashboard (`/staff`) is open.*
+
+---
+
+## Documentation
+- [Project Requirements](docs/requirements.md)
 
 ---
 
