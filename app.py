@@ -38,32 +38,6 @@ def seed():
     db.session.commit()
     print("Services are ready.")
 
-SERVICES = [
-    {"id": 1, "name": "Meals & Combos"},
-    {"id": 2, "name": "Drinks & Beverages"},
-    {"id": 3, "name": "Snacks & Sides"},
-]
-
-TICKETS = [
-    {
-        "number": 101,
-        "name": "Marco",
-        "email": "marco@gmail.com",
-        "service_id": 1,
-        "order_type": "Take-out",
-        "status": "waiting",
-    },
-    {
-        "number": 102,
-        "name": "Bea",
-        "email": "bea@yahoo.com",
-        "service_id": 2,
-        "order_type": "Dine-in",
-        "status": "called",
-    },
-]
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -128,10 +102,13 @@ def leave_queue(ticket_id):
     flash(f"Order #{ticket_id} was cancelled. You have left the queue.", "info")
     return redirect(url_for("index"))
 
+def all_services():
+    """Fetch all food categories ordered by name."""
+    return db.session.scalars(db.select(Service).order_by(Service.name)).all()
 
 @app.get("/join")
 def join_form():
-    return render_template("join.html", services=SERVICES, form={}, errors={})
+    return render_template("join.html", services=all_services(), form={}, errors={})
 
 
 @app.post("/join")
@@ -141,35 +118,45 @@ def join():
     email = form.get("email", "").strip().lower()
     service_id = form.get("service_id", type=int)
     order_type = form.get("order_type", "").strip()
-
+    service = db.session.get(Service, service_id) if service_id else None
     errors = {}
-    if not name:
-        errors["name"] = "Enter your name or nickname."
-
-    if not email or "@" not in email or "." not in email:
+    if not name or len(name) > 80:
+        errors["name"] = "Enter your name or nickname (up to 80 characters)."
+    if not email or "@" not in email or "." not in email or len(email) > 120:
         errors["email"] = "Enter a valid email address (e.g. name@example.com)."
-
-    if service_id not in [s["id"] for s in SERVICES]:
+    if service is None:
         errors["service_id"] = "Choose a food category."
-
     if order_type not in ["Dine-in", "Take-out"]:
         errors["order_type"] = "Select either Dine-in or Take-out."
-
     if errors:
         flash("Please fix the highlighted fields below.", "danger")
-        return render_template("join.html", services=SERVICES, form=form, errors=errors), 400
-
-    number = TICKETS[-1]["number"] + 1 if TICKETS else 101
-    TICKETS.append({
-        "number": number,
-        "name": name,
-        "email": email,
-        "service_id": service_id,
-        "order_type": order_type,
-        "status": "waiting"
-    })
-    flash(f"You joined the queue! Your ticket number is #{number}.", "success")
-    return redirect(url_for("ticket", ticket_id=number))
+        return render_template("join.html", services=all_services(), form=form, errors=errors), 400
+    # Find existing customer or create new one
+    user = db.session.scalar(db.select(User).filter_by(email=email))
+    if user is None:
+        user = User(name=name, email=email, role="customer")
+        db.session.add(user)
+    else:
+        user.name = name  # Update name in case customer updated their preferred nickname
+    # Assign ticket sequence number (starts at 101)
+    max_num = db.session.scalar(db.select(func.max(Ticket.number)))
+    next_num = (max_num + 1) if max_num else 101
+    ticket = Ticket(
+        number=next_num,
+        user=user,
+        service=service,
+        order_type=order_type,
+        status="waiting",
+    )
+    db.session.add(ticket)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Something went wrong saving your ticket. Please try again.", "danger")
+        return render_template("join.html", services=all_services(), form=form, errors={}), 409
+    flash(f"You joined the queue! Your ticket number is #{ticket.number}.", "success")
+    return redirect(url_for("ticket", ticket_id=ticket.id))
 
 
 @app.get("/staff")
