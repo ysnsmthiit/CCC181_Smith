@@ -55,7 +55,7 @@
             <div class="bg-light p-3 rounded-3 text-start small border my-3">
                 <div class="d-flex justify-content-between py-1">
                     <span class="text-muted">Customer:</span>
-                    <span class="fw-semibold text-dark">{{ ticket.name }}</span>
+                    <span class="fw-semibold text-dark">{{ ticket.user.name }}</span>
                 </div>
                 <div class="d-flex justify-content-between py-1 border-top">
                     <span class="text-muted">Category:</span>
@@ -65,10 +65,14 @@
                     <span class="text-muted">Order Type:</span>
                     <span class="badge bg-secondary">{{ ticket.order_type }}</span>
                 </div>
-                {% if ticket.email %}
+                <div class="d-flex justify-content-between py-1 border-top">
+                    <span class="text-muted">Joined:</span>
+                    <span class="fw-semibold text-dark">{{ ticket.created_at|local }}</span>
+                </div>
+                {% if ticket.user.email %}
                 <div class="d-flex justify-content-between py-1 border-top">
                     <span class="text-muted">Receipt Email:</span>
-                    <span class="text-truncate ps-2">{{ ticket.email }}</span>
+                    <span class="text-truncate ps-2">{{ ticket.user.email }}</span>
                 </div>
                 {% endif %}
             </div>

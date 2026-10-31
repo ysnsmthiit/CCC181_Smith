@@ -24,8 +24,8 @@
                 action="{{ url_for('staff_action', ticket_id=next_waiting.number, action='call', service_id=selected) }}">
                 <button type="submit"
                     class="btn btn-warning w-100 py-3 fw-bold fs-4 shadow-sm border border-dark-subtle"
-                    aria-label="Call next waiting ticket #{{ next_waiting.number }} for {{ next_waiting.name }}">
-                    📢 Call next order (#{{ next_waiting.number }})
+                    aria-label="Call next waiting ticket #{{ next_waiting.number }} for {{ next_waiting.user.name }}">
+                    Call next order (#{{ next_waiting.number }})
                 </button>
             </form>
             {% else %}
@@ -86,11 +86,12 @@
                     </div>
 
                     <p class="fs-5 mb-3 text-dark">
-                        <strong>{{ t.name }}</strong> &bull;
+                        <strong>{{ t.user.name }}</strong> &bull;
                         <span class="badge text-bg-light border text-dark">{{ t.order_type }}</span> &bull;
-                        <span class="text-dark fw-medium">{{ names.get(t.service_id, 'Other') }}</span>
-                        {% if t.email %}
-                        <small class="text-muted d-block d-md-inline ms-md-2">({{ t.email }})</small>
+                        <span class="text-dark fw-medium">{{ t.service.name }}</span>
+                        <small class="text-muted d-block d-md-inline ms-md-2">Joined {{ t.created_at|local }}</small>
+                        {% if t.user.email %}
+                        <small class="text-muted d-block d-md-inline ms-md-2">({{ t.user.email }})</small>
                         {% endif %}
                     </p>
 
@@ -100,7 +101,7 @@
                             <form method="post"
                                 action="{{ url_for('staff_action', ticket_id=t.number, action='call', service_id=selected) }}">
                                 <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-2 shadow-sm"
-                                    aria-label="Call ticket #{{ t.number }} for {{ t.name }}">
+                                    aria-label="Call ticket #{{ t.number }} for {{ t.user.name }}">
                                     Call
                                 </button>
                             </form>
@@ -109,7 +110,7 @@
                                 action="{{ url_for('staff_action', ticket_id=t.number, action='call', service_id=selected) }}">
                                 <button type="submit"
                                     class="btn btn-outline-primary btn-lg w-100 fw-bold py-2 shadow-sm"
-                                    aria-label="Re-call ticket #{{ t.number }} for {{ t.name }}">
+                                    aria-label="Re-call ticket #{{ t.number }} for {{ t.user.name }}">
                                     Re-call
                                 </button>
                             </form>
@@ -119,7 +120,7 @@
                             <form method="post"
                                 action="{{ url_for('staff_action', ticket_id=t.number, action='serve', service_id=selected) }}">
                                 <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2 shadow-sm"
-                                    aria-label="Mark ticket #{{ t.number }} for {{ t.name }} as served">
+                                    aria-label="Mark ticket #{{ t.number }} for {{ t.user.name }} as served">
                                     ✓ Served
                                 </button>
                             </form>
