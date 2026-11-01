@@ -7,13 +7,19 @@
     <div class="col-12 col-lg-10 col-xl-8">
 
         <!-- 1. Header & Live Stats -->
-        <div class="mb-3 text-center text-md-start">
-            <h1 class="h3 fw-bold mb-1 text-dark">STAFF ORDER BOARD</h1>
-            {% set waiting_count = queue | selectattr('status', 'equalto', 'waiting') | list | length %}
-            {% set called_count = queue | selectattr('status', 'equalto', 'called') | list | length %}
-            <p class="text-dark fw-semibold mb-0">
-                Orders ({{ queue|length }}) &bull; Waiting ({{ waiting_count }}) &bull; Ready ({{ called_count }})
-            </p>
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 text-center text-md-start gap-2">
+            <div>
+                <h1 class="h3 fw-bold mb-1 text-dark">STAFF ORDER BOARD</h1>
+                {% set waiting_count = queue | selectattr('status', 'equalto', 'waiting') | list | length %}
+                {% set called_count = queue | selectattr('status', 'equalto', 'called') | list | length %}
+                <p class="text-dark fw-semibold mb-0">
+                    Orders ({{ queue|length }}) &bull; Waiting ({{ waiting_count }}) &bull; Ready ({{ called_count }})
+                </p>
+            </div>
+            <a href="{{ url_for('services_list') }}" class="btn btn-outline-dark btn-sm rounded-pill px-3 shadow-sm">
+                Manage Categories
+            </a>
         </div>
 
         <!-- 2. Hero "Call Next Order" Banner -->
@@ -21,7 +27,7 @@
         <div class="mb-4">
             {% if next_waiting %}
             <form method="post"
-                action="{{ url_for('staff_action', ticket_id=next_waiting.number, action='call', service_id=selected) }}">
+                action="{{ url_for('staff_action', ticket_id=next_waiting.id, action='call', service_id=selected) }}">
                 <button type="submit"
                     class="btn btn-warning w-100 py-3 fw-bold fs-4 shadow-sm border border-dark-subtle"
                     aria-label="Call next waiting ticket #{{ next_waiting.number }} for {{ next_waiting.user.name }}">
@@ -64,6 +70,7 @@
                 <div class="card-body p-3 p-md-4">
 
                     <div class="d-flex justify-content-between align-items-center mb-2">
+                        <!-- Left: Ticket number and status badge -->
                         <div class="d-flex align-items-center gap-2">
                             <span class="fw-bold fs-3 text-dark">#{{ t.number }}</span>
                             {% if t.status == 'waiting' %}
@@ -75,14 +82,26 @@
                             {% endif %}
                         </div>
 
-                        <form method="post"
-                            action="{{ url_for('staff_action', ticket_id=t.number, action='no-show', service_id=selected) }}"
-                            onsubmit="return confirm('Cancel ticket #{{ t.number }}?');">
-                            <button type="submit" class="btn btn-cancel btn-sm px-3 fw-semibold"
-                                aria-label="Cancel ticket {{ t.number }}">
-                                ✕ Cancel
-                            </button>
-                        </form>
+                        <!-- Right: Action buttons (Soft delete No-Show + Hard delete Trash) -->
+                        <div class="d-flex align-items-center gap-1">
+                            <!-- Soft Delete: No-Show -->
+                            <form method="post"
+                                action="{{ url_for('staff_action', ticket_id=t.id, action='no-show', service_id=selected) }}"
+                                onsubmit="return confirm('Mark ticket #{{ t.number }} as no-show?');">
+                                <button type="submit" class="btn btn-cancel btn-sm px-2 fw-semibold"
+                                    aria-label="Mark ticket {{ t.number }} as no-show">
+                                    ✕ No-Show
+                                </button>
+                            </form>
+                            <!-- Hard Delete: Permanent Removal -->
+                            <form method="post" action="{{ url_for('delete_ticket', ticket_id=t.id) }}"
+                                data-confirm="Permanently delete order #{{ t.number }}? This cannot be undone.">
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-2"
+                                    aria-label="Permanently delete ticket {{ t.number }}">
+                                    🗑 Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
 
                     <p class="fs-5 mb-3 text-dark">
@@ -99,7 +118,7 @@
                         <div class="col-6">
                             {% if t.status == 'waiting' %}
                             <form method="post"
-                                action="{{ url_for('staff_action', ticket_id=t.number, action='call', service_id=selected) }}">
+                                action="{{ url_for('staff_action', ticket_id=t.id, action='call', service_id=selected) }}">
                                 <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-2 shadow-sm"
                                     aria-label="Call ticket #{{ t.number }} for {{ t.user.name }}">
                                     Call
@@ -107,7 +126,7 @@
                             </form>
                             {% else %}
                             <form method="post"
-                                action="{{ url_for('staff_action', ticket_id=t.number, action='call', service_id=selected) }}">
+                                action="{{ url_for('staff_action', ticket_id=t.id, action='call', service_id=selected) }}">
                                 <button type="submit"
                                     class="btn btn-outline-primary btn-lg w-100 fw-bold py-2 shadow-sm"
                                     aria-label="Re-call ticket #{{ t.number }} for {{ t.user.name }}">
@@ -118,7 +137,7 @@
                         </div>
                         <div class="col-6">
                             <form method="post"
-                                action="{{ url_for('staff_action', ticket_id=t.number, action='serve', service_id=selected) }}">
+                                action="{{ url_for('staff_action', ticket_id=t.id, action='serve', service_id=selected) }}">
                                 <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2 shadow-sm"
                                     aria-label="Mark ticket #{{ t.number }} for {{ t.user.name }} as served">
                                     ✓ Served

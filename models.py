@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, String, func, true
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
@@ -35,6 +35,9 @@ class Service(db.Model):
     avg_minutes: Mapped[int] = mapped_column(
         Integer, default=10, server_default="10", nullable=False
     )
+    
+    active: Mapped[bool] = mapped_column(default=True, server_default=true(), nullable=False)
+    
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
