@@ -21,9 +21,11 @@
 | FR-07 | A stall operator can mark a called ticket as `served` or flag it as `no-show` with a recorded timestamp. | Must | **Yes** | Built (Week 3) |
 | FR-08 ★ | A customer can specify an `Order Type` (*Dine-in* vs *Take-out*) so kitchen staff package the food appropriately. | Must | **Yes** | Built (Week 3) |
 | FR-09 ★ | A stall operator can view live count pills showing active waiting orders per food category. | Should | **Yes** | Built (Week 3) |
-| FR-10 ★ | A customer's contact profile (name and email) is preserved in a user/customer record, linking multiple ticket orders to the same customer. | Must | **Yes** | This week |
+| FR-10 ★ | A customer's contact profile (name and email) is preserved in a user/customer record, linking multiple ticket orders to the same customer. | Must | **Yes** | Built (Week 4) |
 | FR-11 ★ | A stall operator can re-call a ticket with an audio/visual pulse if the customer did not hear their number in noisy stall conditions. | Could | **Yes** | Later |
 | FR-12 | A stall operator can add, rename, or toggle availability of a food service category. | Could | **Yes** | Later |
+
+*(★ marks requirements specific to the food stall domain; at least 3 required, 4 provided).*
 
 ---
 
